@@ -1,0 +1,105 @@
+<html>
+<head>
+<style>
+	#canvasOne{}
+</style>	
+</head>
+<body>
+<div style="position: absolute; top: 50px; left: 50px;">
+<form>
+  
+  Property: <select id="propertyTpye">
+  <option value="foreColor">ForeColor</option>
+  <option value="backColor">BackColor</option>
+  </select>
+  <br>
+  Number Of Lines: <input id="textBox" placeholder="Enter Number Of Lines" />
+  
+ </form>
+ <div>
+ <canvas id="canvasOne" width="500" height="300">
+ Your browser does not support HTML5 Canvas.
+</canvas>
+<canvas id="layer1" height="300px" width="400">
+This text is displayed if your browser does not support HTML5 Canvas.
+</canvas>
+</div>
+<script>
+ var ctx = document.getElementById('canvasOne').getContext('2d');
+//Creates the 6*6 color palette 
+for (var i=0;i<6;i++){
+    for (var j=0;j<6;j++){
+      ctx.fillStyle = 'rgb(' + Math.floor(255-42.5*i) + ',' +
+                       Math.floor(255-42.5*j) + ',0)';
+      ctx.fillRect(j*25,i*25,25,25);
+    }
+}
+
+var lineNumber = 0;
+var property = "foreColor";
+var message = "Line";
+
+var formElement = document.getElementById("textBox");
+formElement.addEventListener("keyup", textBoxChanged, false);
+
+//when change in line number happens
+function textBoxChanged(e) {
+      var target = e.target;
+      lineNumber = target.value;
+      drawLines();
+}
+
+//Draw the second canvas based on data from first canvas
+function drawLines(property) {
+var ctx2 = document.getElementById('layer1').getContext('2d');
+
+//To find change in property type
+switch(property) {
+         case "foreColor":
+               //context.fillStyle = tempColor;
+               // context.fillText  (message, xPosition,yPosition);
+            break;
+         case "backColor":
+            //context.strokeStyle = tempColor;
+           // context.strokeText  (message, xPosition,yPosition);
+            break;
+}	    
+	    
+for(var k=0;k<lineNumber;k++){
+for(var l=0;l<lineNumber;l++){
+	//To draw rectangle
+	ctx2.fillStyle = "#FF0000";
+	ctx2.fillRect(l*25,k*25,25,25);
+	ctx2.fillStyle = '#ffffff';
+	
+	//Fills text inside
+	ctx2.font = '20px sans-serif';
+	ctx2.textBaseline = 'top';
+	ctx2.fillText  (message, l*25, k*25);
+	
+	//Draw vertical line
+	ctx2.moveTo((l+1)*25, 0);
+	ctx2.lineTo((l+1)*25,(l+1)*25);
+	ctx2.strokeStyle = "#25eee";
+	ctx2.stroke();	
+  }	
+  //Draw horizontal line
+  ctx2.moveTo(0, (k)*25);
+  ctx2.lineTo((k)*25, (k)*25);
+  ctx2.strokeStyle = "#25eee";
+  ctx2.stroke();
+ }
+}
+
+formElement = document.getElementById("propertyTpye");
+formElement.addEventListener("change", propertyTypeChanged, false);
+
+function propertyTypeChanged(){
+	var target = e.target;
+	property = target.value;
+	drawLines(property);
+}
+</script>
+</div>
+</body>
+</html>
